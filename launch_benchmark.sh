@@ -42,6 +42,12 @@ function main {
     fetch_cpu_info
     set_environment
 
+    # unzip files
+    cd hifigan/
+    unzip -o generator_LJSpeech.pth.tar.zip
+    unzip -o generator_universal.pth.tar.zip
+    cd ../
+
     # if multiple use 'xxx,xxx,xxx'
     model_name_list=($(echo "${model_name}" |sed 's/,/ /g'))
     batch_size_list=($(echo "${batch_size}" |sed 's/,/ /g'))
