@@ -249,7 +249,7 @@ function logs_path_clean {
 function init_params {
     device='cpu'
     framework='pytorch'
-    model_name='DCRNN'
+    model_name='FastSpeech2'
     mode_name='realtime'
     precision='float32'
     batch_size=1
