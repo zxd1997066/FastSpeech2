@@ -98,14 +98,14 @@ def synthesize(model, step, configs, vocoder, batchs, control_values):
                 e_control=energy_control,
                 d_control=duration_control
             )
-            synth_samples(
-                batch,
-                output,
-                vocoder,
-                model_config,
-                preprocess_config,
-                train_config["path"]["result_path"],
-            )
+            # synth_samples(
+            #     batch,
+            #     output,
+            #     vocoder,
+            #     model_config,
+            #     preprocess_config,
+            #     train_config["path"]["result_path"],
+            # )
 
 
 if __name__ == "__main__":
