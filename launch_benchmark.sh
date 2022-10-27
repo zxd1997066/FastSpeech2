@@ -42,7 +42,14 @@ function main {
     fetch_cpu_info
     set_environment
 
-    # unzip files
+    # requirements
+    if [ "${CKPT_DIR}" == "" ];then
+        set +x
+        echo "[ERROR] Please set CKPT_DIR before launch"
+        echo "  export CKPT_DIR=/path/to/checkpoint.pt"
+        exit 1
+        set -x
+    fi
     cd hifigan/
     unzip -o generator_LJSpeech.pth.tar.zip
     unzip -o generator_universal.pth.tar.zip
@@ -56,7 +63,8 @@ function main {
     for model_name in ${model_name_list[@]}
     do
         # cache
-        python synthesize.py --source preprocessed_data/LJSpeech/val.txt \
+        python synthesize.py --ckpt_dir ${CKPT_DIR} \
+            --source preprocessed_data/LJSpeech/val.txt \
             --restore_step 900000 --mode batch -p config/LJSpeech/preprocess.yaml \
             -m config/LJSpeech/model.yaml -t config/LJSpeech/train.yaml \
             --batch_size 1 --num_iter 3 --num_warmup 1 \
@@ -87,7 +95,7 @@ function generate_core {
 
         printf " numactl -m $(echo ${cpu_array[i]} |awk -F ';' '{print $2}') \
                     -C $(echo ${cpu_array[i]} |awk -F ';' '{print $1}') \
-            python synthesize.py --source preprocessed_data/LJSpeech/val.txt \
+            python synthesize.py --ckpt_dir ${CKPT_DIR} --source preprocessed_data/LJSpeech/val.txt \
                 --restore_step 900000 --mode batch -p config/LJSpeech/preprocess.yaml \
                 -m config/LJSpeech/model.yaml -t config/LJSpeech/train.yaml \
                 --batch_size $batch_size --num_iter $num_iter --num_warmup $num_warmup \
@@ -119,7 +127,7 @@ function generate_core_launcher {
                     --log_path ${log_dir} \
                     --ninstances ${#cpu_array[@]} \
                     --ncore_per_instance ${real_cores_per_instance} \
-            synthesize.py --source preprocessed_data/LJSpeech/val.txt \
+            synthesize.py --ckpt_dir ${CKPT_DIR}  --source preprocessed_data/LJSpeech/val.txt \
                 --restore_step 900000 --mode batch -p config/LJSpeech/preprocess.yaml \
                 -m config/LJSpeech/model.yaml -t config/LJSpeech/train.yaml \
                 --batch_size $batch_size --num_iter $num_iter --num_warmup $num_warmup \
