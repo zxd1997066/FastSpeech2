@@ -19,7 +19,6 @@ import os
 import sys
 import time
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def read_lexicon(lex_path):
@@ -227,12 +226,14 @@ if __name__ == "__main__":
     parser.add_argument('--channels_last', default=1, type=int, help='Use NHWC or not')
     parser.add_argument('--ipex', action='store_true', default=False, help='enable ipex')
     parser.add_argument('--jit', action='store_true', default=False, help='enable JIT')
-    parser.add_argument('--cuda', action='store_true', default=False, help='Use CUDA')
+    parser.add_argument('--device', default="cpu", type=str, help='cpu, cuda or xpu')
     parser.add_argument('--profile', action='store_true', default=False, help='collect timeline')
     parser.add_argument('--num_iter', default=1, type=int, help='test iterations')
     parser.add_argument('--num_warmup', default=0, type=int, help='test warmup')
     parser.add_argument('--ckpt_dir', default=None, type=str, help='path to ckpt')
     args = parser.parse_args()
+    
+    device = torch.device("cuda" if args.device == 'cuda' and torch.cuda.is_available() else "cpu")
 
     # Check source texts
     if args.mode == "batch":
