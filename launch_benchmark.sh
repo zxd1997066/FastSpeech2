@@ -16,6 +16,7 @@ function main {
         exit 1
         set -x
     fi
+    pip install -r requirements.txt
     cd hifigan/
     unzip -o generator_LJSpeech.pth.tar.zip
     unzip -o generator_universal.pth.tar.zip
