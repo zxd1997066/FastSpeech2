@@ -1,9 +1,9 @@
 g2p-en == 2.1.0
 inflect == 4.1.0
-librosa == 0.7.2
+librosa
 matplotlib == 3.2.2
-numba == 0.48
-numpy == 1.19.0
+numba
+numpy
 pypinyin==0.39.0
 pyworld == 0.2.10
 PyYAML==5.4.1
