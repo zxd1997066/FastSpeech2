@@ -117,6 +117,7 @@ def synthesize(model, args, configs, vocoder, batchs, control_values):
                     for i in range(args.num_iter):
                         elapsed = time.time()
                         output = model(*(batch[2:]), p_control=pitch_control, e_control=energy_control, d_control=duration_control)
+                        if torch.cuda.is_available(): torch.cuda.synchronize()
                         p.step()
                         elapsed = time.time() - elapsed
                         print("Iteration: {}, inference time: {} sec.".format(i, elapsed), flush=True)
@@ -127,16 +128,18 @@ def synthesize(model, args, configs, vocoder, batchs, control_values):
                 for i in range(args.num_iter):
                     elapsed = time.time()
                     output = model(*(batch[2:]), p_control=pitch_control, e_control=energy_control, d_control=duration_control)
+                    if torch.cuda.is_available(): torch.cuda.synchronize()
                     elapsed = time.time() - elapsed
                     print("Iteration: {}, inference time: {} sec.".format(i, elapsed), flush=True)
                     if i >= args.num_warmup:
                         total_time += elapsed
                         total_sample += args.batch_size
 
+            print("\n", "-"*20, "Summary", "-"*20)
             latency = total_time / total_sample * 1000
             throughput = total_sample / total_time
-            print("inference Latency:\t {:.3f} ms".format(latency))
-            print("inference Throughput:\t {:.2f} samples/s".format(throughput))
+            print("inference Latency: {} ms".format(latency))
+            print("inference Throughput: {} samples/s".format(throughput))
             # synth_samples(
             #     batch,
             #     output,
