@@ -17,7 +17,7 @@ def get_model(args, configs, device, train=False):
             train_config["path"]["ckpt_path"],
             "{}.pth.tar".format(args.restore_step),
         )
-        ckpt = torch.load(ckpt_path, map_location=device)
+        ckpt = torch.load(ckpt_path, map_location='cpu')
         model.load_state_dict(ckpt["model"])
 
     if train:
@@ -31,7 +31,7 @@ def get_model(args, configs, device, train=False):
 
     model.eval()
     model.requires_grad_ = False
-    return model
+    return model.to(device)
 
 
 def get_param_num(model):
@@ -60,15 +60,15 @@ def get_vocoder(config, device):
         config = hifigan.AttrDict(config)
         vocoder = hifigan.Generator(config)
         if speaker == "LJSpeech":
-            ckpt = torch.load("hifigan/generator_LJSpeech.pth.tar", map_location=device)
+            ckpt = torch.load("hifigan/generator_LJSpeech.pth.tar", map_location='cpu')
         elif speaker == "universal":
-            ckpt = torch.load("hifigan/generator_universal.pth.tar", map_location=device)
+            ckpt = torch.load("hifigan/generator_universal.pth.tar", map_location='cpu')
         vocoder.load_state_dict(ckpt["generator"])
         vocoder.eval()
         vocoder.remove_weight_norm()
         vocoder.to(device)
 
-    return vocoder
+    return vocoder.to(device)
 
 
 def vocoder_infer(mels, vocoder, model_config, preprocess_config, lengths=None):
