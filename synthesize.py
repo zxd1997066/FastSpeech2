@@ -297,7 +297,7 @@ if __name__ == "__main__":
             synthesize(model, args, configs, vocoder, batchs, control_values)
     elif args.precision == "float16":
         print("---- Use cuda AMP float16")
-        with torch.cuda.amp.autocast(enabled=True, dtype=torch.float16):
+        with torch.cpu.amp.autocast(enabled=True, dtype=torch.half):
             synthesize(model, args, configs, vocoder, batchs, control_values)
     else:
         synthesize(model, args, configs, vocoder, batchs, control_values)
