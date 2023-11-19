@@ -235,6 +235,10 @@ if __name__ == "__main__":
     parser.add_argument('--num_iter', default=1, type=int, help='test iterations')
     parser.add_argument('--num_warmup', default=0, type=int, help='test warmup')
     parser.add_argument('--ckpt_dir', default=None, type=str, help='path to ckpt')
+    parser.add_argument("--compile", action='store_true', default=False,
+                    help="enable torch.compile")
+    parser.add_argument("--backend", type=str, default='inductor',
+                    help="enable torch.compile backend")
     args = parser.parse_args()
     
     device = torch.device("cuda" if args.device == 'cuda' and torch.cuda.is_available() else "cpu")
@@ -267,6 +271,8 @@ if __name__ == "__main__":
         else:
             model = ipex.optimize(model, dtype=torch.float32, inplace=True)
         print("---- Use ipex model")
+    if args.compile:
+        model = torch.compile(model, backend=args.backend, options={"freezing": True})
 
     # Load vocoder
     vocoder = get_vocoder(model_config, device)
