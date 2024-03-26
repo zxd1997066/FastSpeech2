@@ -17,6 +17,11 @@ function main {
         set -x
     fi
     pip install -r requirements.txt
+    if [ "${device}" == "cuda" ];then
+        pip install PyYAML==6.0.1
+    else
+        pip install PyYAML==5.4.1
+    fi
     cd hifigan/
     unzip -o generator_LJSpeech.pth.tar.zip
     unzip -o generator_universal.pth.tar.zip
