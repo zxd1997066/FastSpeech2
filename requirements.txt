@@ -5,7 +5,7 @@ matplotlib
 numba
 numpy
 pypinyin==0.39.0
-pyworld == 0.2.10
+pyworld
 PyYAML==5.4.1
 scikit-learn
 scipy
