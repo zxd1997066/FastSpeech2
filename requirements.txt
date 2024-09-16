@@ -6,7 +6,7 @@ numba
 numpy
 pypinyin==0.39.0
 pyworld
-PyYAML==5.4.1
+PyYAML
 scikit-learn
 scipy
 soundfile==0.10.3.post1
